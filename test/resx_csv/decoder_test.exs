@@ -21,7 +21,7 @@ defmodule ResxCSV.DecoderTest do
         assert ["foo; charset=utf-8"] == (Resx.Resource.open!(~S(data:csv/csvs,{})) |> Map.replace!(:content, %Resx.Resource.Content{data: "{}", type: ["csv/csvs; charset=utf-8"]}) |> Resx.Resource.transform!(ResxCSV.Decoder)).content.type
     end
 
-    describe "csv" do
+    describe "decoding" do
         test "valid" do
             assert [
                 %{ "a" => "1", "b" => "2", "c" => "3" },
