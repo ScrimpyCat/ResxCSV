@@ -53,6 +53,11 @@ defmodule ResxCSV.Decoder do
       option specifies whether the row length needs to be the same or whether it
       can be of variable length.
 
+      `:delimiter` - expects a `String.t` or `Regex.t` value, defaults to `"\r\n"`.
+      This option specifies the delimiter use to separate the different rows. As
+      streams are already assumed to be separated, this only applies to non-streamed
+      content.
+
         Resx.Resource.transform(resource, ResxCSV.Decoder, skip_errors: true, headers: false)
     """
     use Resx.Transformer
@@ -63,7 +68,7 @@ defmodule ResxCSV.Decoder do
     def transform(resource = %{ content: content }, opts) do
         case validate_type(content.type) do
             { :ok, { type, separator } } ->
-                content = prepare_content(content)
+                content = prepare_content(content, opts[:delimiter] || "\r\n")
                 decode = if(opts[:skip_errors], do: &filter_decode/2, else: &CSV.decode!/2)
                 opts = [
                     headers: Keyword.get(opts, :headers, true),
@@ -82,8 +87,8 @@ defmodule ResxCSV.Decoder do
     defp filter_row({ :ok, _ }), do: true
     defp filter_row(_), do: false
 
-    defp prepare_content(content = %Content.Stream{}), do: content
-    defp prepare_content(content = %Content{}), do: %Content.Stream{ type: content.type, data: String.split(content.data, "\n") }
+    defp prepare_content(content = %Content.Stream{}, _), do: content
+    defp prepare_content(content = %Content{}, delimiter), do: %Content.Stream{ type: content.type, data: String.split(content.data, delimiter) }
 
     @default_csv_types [
         { ~r/\/(csv(\+csv)?|(.*?\+)csv)(;|$)/, "/\\3x.erlang.native\\4", ?, },
