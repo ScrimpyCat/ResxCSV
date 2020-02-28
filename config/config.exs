@@ -44,5 +44,5 @@ if Mix.env == :test do
     }
 
     config :resx, Resx.Producers.File,
-        access: ["**/resx_csv/test/resx_csv/*.[ct]sv"]
+        access: ["**/test/resx_csv/*.[ct]sv"]
 end
