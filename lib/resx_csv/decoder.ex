@@ -53,7 +53,7 @@ defmodule ResxCSV.Decoder do
       option specifies whether the row length needs to be the same or whether it
       can be of variable length.
 
-      `:delimiter` - expects a `String.t` or `Regex.t` value, defaults to `"\r\n"`.
+      `:delimiter` - expects a `String.t` or `Regex.t` value, defaults to `"\\r\\n"`.
       This option specifies the delimiter use to separate the different rows. As
       streams are already assumed to be separated, this only applies to non-streamed
       content.
